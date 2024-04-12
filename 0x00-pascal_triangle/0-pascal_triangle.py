@@ -22,4 +22,3 @@ def pascal_triangle(n):
             printlist.append(int(newValue))
         triangle.append(printlist)
     return triangle
-    
