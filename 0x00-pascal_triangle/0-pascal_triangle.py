@@ -13,11 +13,13 @@ def pascal_triangle(n):
     if (n <= 0):
         return []
 
+    triangle = []
     for rownum in range(n):
         newValue = 1
         printlist = [newValue]
         for iteration in range(rownum):
             newValue = newValue * (rownum - iteration) * 1 / (iteration + 1)
             printlist.append(int(newValue))
-        print(printlist)
-    print()
+        triangle.append(printlist)
+    return triangle
+    
