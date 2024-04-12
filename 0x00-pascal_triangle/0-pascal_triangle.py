@@ -13,7 +13,7 @@ def pascal_triangle(n):
     if (n <= 0):
         return []
 
-    triangle = [[]]
+    triangle = []
     for rownum in range(n):
         newValue = 1
         printlist = [newValue]
