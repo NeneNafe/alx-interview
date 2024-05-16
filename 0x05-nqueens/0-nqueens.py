@@ -43,16 +43,16 @@ def to_validate():
     """ Verify if the size to the answer is possible """
     if (len(sys.argv) != 2):
         print("N must be a number")
-        exit(1)
+        sys.exit(1)
     try:
         num = int(sys.argv[1])
         if num < 4:
             print("N must be at least 4")
-            exit(1)
+            sys.exit(1)
         return num
     except ValueError:
         print("N must be a number")
-        exit(1)
+        sys.exit(1)
 
 
 def main():
