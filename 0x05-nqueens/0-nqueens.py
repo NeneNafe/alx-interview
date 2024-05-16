@@ -5,7 +5,7 @@
 import sys
 
 
-def is_safe(board, row, col, Num):
+def is_safe(board, row, col):
     """Check if there is a queen in the same column
 
     Args:
@@ -15,76 +15,55 @@ def is_safe(board, row, col, Num):
         N: The size of the board
     """
     for i in range(row):
-        if board[i][col] == 1:
+        if board[i] == col:
             return False
-
-    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-        if board[i][j] == 1:
-            return False
-
-    for i, j in zip(range(row, Num, 1), range(col, -1, -1)):
-        if board[i][j] == 1:
+        if abs(row - i) == abs(board[i] - col):
             return False
 
     return True
 
 
-def PrintBoard(board):
-    """ Prints the board """
-    NewList = []
-    for i, row in enumerate(board):
-        value = []
-        for j, col in enumerate(row):
-            if col == 1:
-                value.append(i)
-                value.append(j)
-        NewList.append(value)
-    print(NewList)
+def solveNqueens(num):
+    def backtracking(row, board, results):
+        """ Solves the numbers on a board with queens """
+        if row == num:
+            results.append(board[:])
+        for col in range(num):
+            if is_safe(board=board, row=row, col=col):
+                board[row] = col
+                backtracking(board=board, row=row + 1, results=results)
+                board[row] = -1
+    results = []
+    board = [-1] * num
+    backtracking(row=0, board=board, results=results)
+    return results
 
 
-def solveNqueens(board, col, num):
-    """ Solves the numbers on a board with queens """
-
-    if (col == num):
-        PrintBoard(board)
-        return True
-    result = False
-    for i in range(num):
-        if (is_safe(board, i, col, num)):
-            board[i][col] = 1
-
-            result = solveNqueens(board, col + 1, num) or result
-            board[i][col] = 0
-    return result
-
-
-def solve(num):
-    """ Finds all the possibilities on the board """
-    board = [[0 for i in range(num)]for i in range(num)]
-
-    if not solveNqueens(board, 0, num):
-        return False
-
-    return True
-
-
-def to_validate(args):
+def to_validate():
     """ Verify if the size to the answer is possible """
-    if (len(args) == 2):
-        try:
-            num = int(args[1])
-        except Exception:
-            print("N must be a number")
-            exit(1)
+    if (len(sys.argv) != 2):
+        print("N must be a number")
+        exit(1)
+    try:
+        num = int(sys.argv[1])
         if num < 4:
             print("N must be at least 4")
             exit(1)
         return num
-    else:
-        print("Usage: nqueens N")
+    except ValueError:
+        print("N must be a number")
         exit(1)
 
 
+def main():
+    """ the main function
+    """
+    num = to_validate()
+    results = solveNqueens(num)
+    for result in results:
+        outcome = [[rows, column] for rows, column in enumerate(result)]
+        print(outcome)
+
+
 if __name__ == "__main__":
-    num = to_validate(sys.argv)
-    solve(num)
+    main()
