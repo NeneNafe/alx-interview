@@ -42,7 +42,7 @@ def solveNqueens(num):
 def to_validate():
     """ Verify if the size to the answer is possible """
     if (len(sys.argv) != 2):
-        print("N must be a number")
+        print("Usage: nqueens N")
         sys.exit(1)
     try:
         num = int(sys.argv[1])
