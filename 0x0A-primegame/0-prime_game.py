@@ -1,51 +1,49 @@
 #!/usr/bin/python3
-""" a Prim game function """
+""" a Prime game module """
 
 
 def isWinner(x, nums):
     """ a function to find a winner between two players """
-    # Determine the maximum number in nums
+    # Return None when invalid option has been picked
+    if not nums or x < 1:
+        return None
     max_num = max(nums)
 
-    # Fine all prime numbers
-    is_prime = [True] * (max_num + 1)
+    # Initialize a list to determine prime status of
+    # numbers up to max_num
+    is_prime = [True for _ in range(max(max_num + 1, 2))]
+
+    # Implement the Sieve of Eratosthenes
+    for i in range(2, int(pow(max_num, 0.5)) + 1):
+        if not is_prime[i]:
+            continue
+
+        # Mark multiples of i as non-prime
+        for j in range(i * i, max_num + 1, i):
+            is_prime[j] = False
+
+    # Mark 0 and 1 as non-prime explicitly
     is_prime[0] = is_prime[1] = False
-    p = 2
-    while (p * p <= max_num):
-        if (is_prime[p] is True):
-            for i in range(p * p, max_num + 1, p):
-                is_prime[i] = False
-        p += 1
 
-    primes = [i for i in range(max_num + 1) if is_prime[i]]
+    # y will count the number of primes up to each index
+    y = 0
+    for i in range(len(is_prime)):
+        if is_prime[i]:
+            y += 1
+        # Store the count of primes up to index i in is_prime[i]
+        is_prime[i] = y
 
-    def play_game(n):
-        remaining_primes = [p for p in primes if p <= n]
-        move_count = 0
-
-        while remaining_primes:
-            current_prime = remaining_primes.pop(0)
-            remaining_primes = [p for p in remaining_primes
-                                if p % current_prime != 0]
-            move_count += 1
-
-        return move_count
-
-    # Count the wins for Maria and Ben
-    maria_wins = 0
-    ben_wins = 0
-
-    for n in nums:
-        moves = play_game(n)
-        if moves % 2 == 1:  # Maria wins if the number of moves is odd
-            maria_wins += 1
-        else:  # Ben wins if the number of moves is even
-            ben_wins += 1
+    player_1 = 0
+    for p in nums:
+        # Maria wins if the count of primes up to p is odd
+        player_1 += is_prime[p] % 2 == 1
 
     # Determine the overall winner
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    if player_1 * 2 == len(nums):
+        # If Maria and Ben win the same number of rounds, it's a tie
         return None
+
+    if player_1 * 2 > len(nums):
+        return "Maria"  # Maria wins more rounds than Ben
+
+    return "Ben"  # Ben wins more rounds than Maria
